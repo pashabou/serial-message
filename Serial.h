@@ -1,3 +1,5 @@
+#pragma once
+
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
@@ -11,8 +13,9 @@
  * Analogue of Arduino Serial object for non-Arduino communication
  * - supports begin, readBytes, write, available, flush
  */
-struct {
+struct SerialInterface {
 private:
+  /** Serial file descriptor */
   int serial;
 
 public:
@@ -69,4 +72,6 @@ public:
   void clearInput() { tcflush(serial, TCIFLUSH); }
   void clearOutput() { tcflush(serial, TCOFLUSH); }
   void flush() {}
-} Serial;
+};
+
+SerialInterface Serial;

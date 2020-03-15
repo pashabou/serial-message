@@ -1,5 +1,9 @@
+#pragma once
+
 #if not defined (__AVR__) || (__avr__)
 #include "Serial.h"
+#else
+typedef HardwareSerial SerialInterface;
 #endif
 
 #include "SerialBuffer.h"
@@ -13,7 +17,9 @@ private:
   SerialBuffer<Size> buffer;
 
 public:
-  Message() {}
+  template<unsigned int N>
+  Message(SerialInterface si = Serial, int to = 100, char (&str)[N] = "msg")
+  : buffer(SerialBuffer<Size>(si, to, str)) {}
 
   /** 
    * Get data from message and put directly into argument addresses
@@ -36,14 +42,6 @@ public:
     constexpr auto size = (0 + ... + sizeof(Data));
     static_assert(Size == size, "Incorrect data size");
     (buffer << ... << data);
-    buffer.emit();
-  }
-
-  /** Write string directly into message and Serial output */
-  template<unsigned int N>
-  inline void write(const char (&str)[N]) {
-    static_assert(N == Size, "Incorrect string size");
-    for (auto c: str) buffer << c;
     buffer.emit();
   }
 

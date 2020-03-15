@@ -1,3 +1,5 @@
+#pragma once
+
 /**
  * Implements CRC32 hashing for message verification
  */
